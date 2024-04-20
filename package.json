@@ -1,0 +1,38 @@
+{
+  "name": "@tjsr/simple-env-utils",
+  "version": "0.0.1",
+  "description": "Simple environment utils for node projects",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "clean": "rimraf dist",
+    "prepublish": "npm run clean && npm test && npm run build",
+    "test": "jest",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tjsr/simple-env-utils.git"
+  },
+  "keywords": [
+    "env"
+  ],
+  "author": "Tim Rowe <tim@tjsr.id.au>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tjsr/simple-env-utils/issues"
+  },
+  "homepage": "https://github.com/tjsr/simple-env-utils#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.12.7",
+    "dotenv-flow": "^4.1.0",
+    "rimraf": "^5.0.5",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}
