@@ -16,7 +16,7 @@ const config: JestConfigWithTsJest = {
     '^(\\.{1,2}/.*)\\.js$': '$1',
     '^\.+\\.env.*$': '$1',
   },
-  modulePathIgnorePatterns: ['amplify', 'dist', 'node_modules'],
+  modulePathIgnorePatterns: ['amplify', 'dist', 'build', 'node_modules'],
   setupFiles: ['<rootDir>/src/setup-tests.ts'],
   silent: false,
   testEnvironment: 'node',
