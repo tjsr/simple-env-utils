@@ -1,4 +1,4 @@
-import { intEnv, isTestMode, requireEnv, setTestMode } from "./utils.js";
+import { booleanEnv, intEnv, isTestMode, requireEnv, setTestMode } from "./utils.js";
 
 import { mock } from "node:test";
 
@@ -36,7 +36,11 @@ describe('isTestMode', () => {
   });
 
   afterEach(() => {
-    process.env['NODE_ENV'] = currentNodeEnv;
+    if (currentNodeEnv === undefined) {
+      delete process.env['NODE_ENV'];
+    } else {
+      process.env['NODE_ENV'] = currentNodeEnv;
+    }
   });
   
   it('Should return false if NODE_ENV is not test', () => {
@@ -71,8 +75,9 @@ describe('requireEnv', () => {
   afterEach(() => {
     if (currentTestEnv === undefined) {
       delete process.env['TEST_ENV_VAR'];
+    } else {
+      process.env['TEST_ENV_VAR'] = currentTestEnv;
     }
-    process.env['TEST_ENV_VAR'] = currentTestEnv;
   });
 
   it('Should throw error if environment variable is not set', () => {
@@ -89,5 +94,51 @@ describe('requireEnv', () => {
       const someValue = requireEnv('TEST_ENV_VAR');
       expect(someValue).toBe('123');
     }).not.toThrow('TEST_ENV_VAR environment variable not set, which is required.');
+  });
+});
+
+describe('booleanEnv', () => {
+  const TEST_VAR = 'TEST_BOOLEAN_VAR';
+  let currentTestEnv: string | undefined;
+  beforeEach(() => {
+    currentTestEnv = process.env[TEST_VAR];
+  });
+
+  afterEach(() => {
+    if (currentTestEnv === undefined) {
+      delete process.env[TEST_VAR];
+    } else {
+      process.env[TEST_VAR] = currentTestEnv;
+    }
+  });
+
+  it ('Should return true if environment variable not set with a default of true', () => {
+    delete process.env[TEST_VAR];
+    expect(booleanEnv(TEST_VAR, true)).toBe(true);
+  });
+
+  it ('Should return false if environment variable not set with a default of false', () => {
+    delete process.env[TEST_VAR];
+    expect(booleanEnv(TEST_VAR, false)).toBe(false);
+  });
+
+  it ('Should return true if environment variable set true with a default of true', () => {
+    process.env[TEST_VAR] = 'true';
+    expect(booleanEnv(TEST_VAR, true)).toBe(true);
+  });
+
+  it ('Should return false if environment variable set true with a default of true', () => {
+    process.env[TEST_VAR] = 'false';
+    expect(booleanEnv(TEST_VAR, true)).toBe(false);
+  });
+
+  it ('Should return true if environment variable set true with a default of false', () => {
+    process.env[TEST_VAR] = 'true';
+    expect(booleanEnv(TEST_VAR, false)).toBe(true);
+  });
+
+  it ('Should return true if environment variable set true with a default of false', () => {
+    process.env[TEST_VAR] = 'false';
+    expect(booleanEnv(TEST_VAR, false)).toBe(false);
   });
 });

@@ -3,14 +3,17 @@
   "version": "0.0.3",
   "description": "Simple environment utils for node projects",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
+    "build:dev": "tsc && shx cp build/utils.d.ts dist/index.d.ts && npm run webpack -- --mode development",
+    "build": "tsc  && npm run webpack -- --mode production",
     "clean": "rimraf dist coverage",
-    "prepublish": "npm run clean && npm test && npm run build",
+    "dist": "npm run build && shx cp build/utils.d.ts dist/index.d.ts",
+    "dist:dev": "npm run build:dev && shx cp build/utils.d.ts dist/index.d.ts",
+    "prepublish": "npm run clean && npm test && npm run dist",
     "test": "jest",
-    "webpack": "webpack --config webpack.config.babel.js",
-    "build:dev": "tsc && npm run webpack -- --mode development",
-    "build": "tsc && npm run webpack -- --mode production"
+    "webpack": "webpack --config webpack.config.babel.js"
   },
   "repository": {
     "type": "git",
@@ -32,6 +35,7 @@
     "babel-loader": "^9.1.3",
     "dotenv-flow": "^4.1.0",
     "rimraf": "^5.0.5",
+    "shx": "^0.3.4",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",

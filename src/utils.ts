@@ -40,3 +40,10 @@ export const intEnv = (key: string, defaultValue?: number): number => {
     return defaultValue;
   }
 };
+
+export const booleanEnv = (key: string, defaultValue: boolean): boolean => {
+  if (defaultValue === true) {
+    return process.env[key] === 'false' ? false : true;
+  }
+  return process.env[key] === 'true' ? true : false;
+};
