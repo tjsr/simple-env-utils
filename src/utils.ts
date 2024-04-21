@@ -1,21 +1,21 @@
 let TEST_MODE = false;
 
-export const requireEnv = (val: string): string => {
+const requireEnv = (val: string): string => {
   if (process.env[val] === undefined) {
     throw Error(`${val} environment variable not set, which is required.`);
   }
   return process.env[val] as string;
 };
 
-export const setTestMode = (mode = true): void => {
+const setTestMode = (mode = true): void => {
   TEST_MODE = mode;
 };
 
-export const isTestMode = (): boolean => {
+const isTestMode = (): boolean => {
   return process.env['NODE_ENV'] === 'test' || TEST_MODE;
 };
 
-export const intEnv = (key: string, defaultValue?: number): number => {
+const intEnv = (key: string, defaultValue?: number): number => {
   if (process.env[key] === undefined) {
     if (defaultValue === undefined) {
       throw Error(`Environment variable ${key} not set`);
@@ -41,9 +41,11 @@ export const intEnv = (key: string, defaultValue?: number): number => {
   }
 };
 
-export const booleanEnv = (key: string, defaultValue: boolean): boolean => {
+const booleanEnv = (key: string, defaultValue: boolean): boolean => {
   if (defaultValue === true) {
     return process.env[key] === 'false' ? false : true;
   }
   return process.env[key] === 'true' ? true : false;
 };
+
+export { requireEnv, setTestMode, isTestMode, intEnv, booleanEnv};

@@ -6,11 +6,11 @@ dotenvFlow.config({silent: true});
 const config: JestConfigWithTsJest = {
   collectCoverage: false,
   collectCoverageFrom: [
-    'src/**/*.ts',
+    'src/**/*.[m]ts',
   ],
   coverageDirectory: 'coverage',
-  extensionsToTreatAsEsm: ['.ts', '.tsx'],
-  moduleFileExtensions: ['js', 'json', 'ts'],
+  extensionsToTreatAsEsm: ['.ts'],
+  moduleFileExtensions: ['js', 'mjs', 'json', 'ts'],
   moduleNameMapper: {
     '\\.(css|less)$': '<rootDir>/test/mocks/styleMock.ts',
     '^(\\.{1,2}/.*)\\.js$': '$1',

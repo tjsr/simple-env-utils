@@ -2,18 +2,17 @@
   "name": "@tjsr/simple-env-utils",
   "version": "0.0.4",
   "description": "Simple environment utils for node projects",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/utils.js",
+  "module": "dist/utils.js",
+  "types": "dist/utils.d.ts",
   "type": "module",
   "scripts": {
-    "build:dev": "tsc && shx cp build/utils.d.ts dist/index.d.ts && npm run webpack -- --mode development",
-    "build": "tsc  && npm run webpack -- --mode production",
-    "clean": "rimraf dist coverage",
-    "dist": "npm run build && shx cp build/utils.d.ts dist/index.d.ts",
-    "dist:dev": "npm run build:dev && shx cp build/utils.d.ts dist/index.d.ts",
-    "prepublish": "npm run clean && npm test && npm run dist",
+    "build": "rimraf dist && tsc",
+    "prepack": "npm run build",
+    "clean": "rimraf build dist coverage",
+    "prepublishOnly": "npm run clean && npm test && npm run dist",
     "test": "jest",
-    "webpack": "webpack --config webpack.config.babel.js"
+    "check": "npx npm-check"
   },
   "repository": {
     "type": "git",
@@ -33,14 +32,13 @@
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.7",
     "babel-loader": "^9.1.3",
-    "dotenv-flow": "^4.1.0",
     "rimraf": "^5.0.5",
-    "shx": "^0.3.4",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5",
-    "webpack": "^5.91.0",
-    "webpack-cli": "^5.1.4"
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "dotenv-flow": "^4.1.0"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
