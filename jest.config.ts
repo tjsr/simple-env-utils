@@ -21,7 +21,7 @@ const config: JestConfigWithTsJest = {
   silent: false,
   testEnvironment: 'node',
   transform: {
-    '^.+\\.tsx?$': [
+    '^.+\\.m?tsx?$': [
       'ts-jest',
       {
         useESM: true,
