@@ -1,3 +1,7 @@
+import * as dotenv from 'dotenv-flow';
+
+import path from 'path';
+
 let TEST_MODE = false;
 
 const requireEnv = (val: string): string => {
@@ -48,4 +52,18 @@ const booleanEnv = (key: string, defaultValue: boolean): boolean => {
   return process.env[key] === 'true' ? true : false;
 };
 
-export { requireEnv, setTestMode, isTestMode, intEnv, booleanEnv};
+const loadEnvWithDebug = (options?: dotenv.DotenvFlowConfigOptions | undefined): dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult> => {
+  const parseResult: dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult> = dotenv.config(options);
+  if (process.env['NODE_ENV'] === 'development') {
+    console.debug(`Loaded dotenv files: ${dotenv.listFiles().map(
+      (file) => file.substring(file.lastIndexOf(path.sep + 1))).join(', ')}`);
+  }
+  if (parseResult.error && dotenv.listFiles().length > 0) {
+    throw new Error('Error parsing dotenv file: ' + parseResult.error.message, parseResult.error);
+  } else if (parseResult.error) {
+    console.debug('Error parsing dotenv file: ' + parseResult.error.message, parseResult.error);
+  }
+  return parseResult;
+};
+
+export { requireEnv, setTestMode, isTestMode, intEnv, booleanEnv, loadEnvWithDebug };
