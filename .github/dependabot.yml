@@ -1,7 +1,17 @@
 version: 2
+  npm-github:
+    type: npm-registry
+    url: https://npm.pkg.github.com
+    token: ${{secrets.GITHUB_TOKEN}}
+  npm-npmjs:
+    type: npm-registry
+    url: https://registry.npmjs.org
 updates:
   - package-ecosystem: 'npm'
     directory: '/'
+    registries:
+    - npm-github
+    - npm-npmjs
     schedule:
       interval: 'weekly'
   - package-ecosystem: "github-actions"
