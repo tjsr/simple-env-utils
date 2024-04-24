@@ -16,6 +16,16 @@
     "prepublishOnly": "npm run clean && npm test && npm run build",
     "test": "jest"
   },
+  "nodemonConfig": {
+    "watch": [
+      "src",
+      "package.json"
+    ],
+    "extensions": "*.ts",
+    "ignore": "dist",
+    "exec": "tsc && tsc -p tsconfig.cjs.json",
+    "delay": 200
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tjsr/simple-env-utils.git"

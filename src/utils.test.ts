@@ -1,4 +1,4 @@
-import { booleanEnv, intEnv, isTestMode, requireEnv, setTestMode } from "./utils.js";
+import { booleanEnv, intEnv, isProduction, isTestMode, requireEnv, setTestMode } from "./utils.js";
 
 import { mock } from "node:test";
 
@@ -62,6 +62,43 @@ describe('isTestMode', () => {
   it('Should return true if setTestMode has been called', () => {
     setTestMode();
     expect(isTestMode()).toBe(true);
+  });
+});
+
+describe('isProductionMode', () => {
+  let currentNodeEnv: string | undefined;
+  beforeEach(() => {
+    currentNodeEnv = process.env['NODE_ENV'];
+    setTestMode(false);
+  });
+
+  afterEach(() => {
+    if (currentNodeEnv === undefined) {
+      delete process.env['NODE_ENV'];
+    } else {
+      process.env['NODE_ENV'] = currentNodeEnv;
+    }
+  });
+  
+  it('Should return false if NODE_ENV is not production', () => {
+    process.env['NODE_ENV'] = 'development';
+    expect(isProduction()).toBe(false);
+    process.env['NODE_ENV'] = 'test';
+    expect(isProduction()).toBe(false);
+  });
+
+  it('Defaulting to test mode, should return false', () => {
+    expect(isProduction()).toBe(false);
+  });
+
+  it('Should return false if NODE_ENV is test', () => {
+    process.env['NODE_ENV'] = 'test';
+    expect(isProduction()).toBe(false);
+  });
+
+  it('Should return false if setTestMode has been called', () => {
+    setTestMode();
+    expect(isProduction()).toBe(false);
   });
 });
 

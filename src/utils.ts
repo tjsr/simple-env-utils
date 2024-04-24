@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv-flow';
 import path from 'path';
 
 let TEST_MODE = false;
+let PRODUCTION_MODE = false;
 
 const requireEnv = (val: string): string => {
   if (process.env[val] === undefined) {
@@ -15,9 +16,23 @@ const setTestMode = (mode = true): void => {
   TEST_MODE = mode;
 };
 
-const isTestMode = (): boolean => {
-  return process.env['NODE_ENV'] === 'test' || TEST_MODE;
+const setProductionMode = (mode = true): void => {
+  PRODUCTION_MODE = mode;
 };
+
+const isTestMode = (): boolean => {
+  if (TEST_MODE && PRODUCTION_MODE) {
+    throw new Error('Run mode can\'t be set as both test and production mode.');
+  }
+  return !isProduction() && (process.env['NODE_ENV'] === 'test' || TEST_MODE);
+};
+
+const isProduction = (): boolean => {
+  if (TEST_MODE && PRODUCTION_MODE) {
+    throw new Error('Run mode can\'t be set as both test and production mode.');
+  }
+  return process.env['NODE_ENV'] === 'production' || PRODUCTION_MODE;
+}
 
 const intEnv = (key: string, defaultValue?: number): number => {
   if (process.env[key] === undefined) {
@@ -68,4 +83,4 @@ const loadEnvWithDebug = (
   return parseResult;
 };
 
-export { requireEnv, setTestMode, isTestMode, intEnv, booleanEnv, loadEnvWithDebug };
+export { requireEnv, setTestMode, isTestMode, intEnv, booleanEnv, loadEnvWithDebug, isProduction, setProductionMode };
