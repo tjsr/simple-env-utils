@@ -1,6 +1,6 @@
 {
   "name": "@tjsr/simple-env-utils",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Simple environment utils for node projects",
   "main": "dist/cjs/utils.js",
   "module": "dist/esm/utils.js",
