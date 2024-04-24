@@ -32,7 +32,7 @@ const isProduction = (): boolean => {
     throw new Error('Run mode can\'t be set as both test and production mode.');
   }
   return process.env['NODE_ENV'] === 'production' || PRODUCTION_MODE;
-}
+};
 
 const intEnv = (key: string, defaultValue?: number): number => {
   if (process.env[key] === undefined) {
