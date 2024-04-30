@@ -21,7 +21,7 @@
       "src",
       "package.json"
     ],
-    "extensions": "*.ts",
+    "ext": "ts",
     "ignore": "dist",
     "exec": "tsc && tsc -p tsconfig.cjs.json",
     "delay": 200
