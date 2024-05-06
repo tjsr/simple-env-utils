@@ -40,7 +40,7 @@
   },
   "homepage": "https://github.com/tjsr/simple-env-utils#readme",
   "devDependencies": {
-    "@eslint/js": "^9.1.1",
+    "@eslint/js": "^9.2.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.7",
     "@typescript-eslint/eslint-plugin": "^7.7.1",
