@@ -70,6 +70,19 @@ const booleanEnv = (key: string, defaultValue: boolean): boolean => {
 const loadEnvWithDebug = (
   options?: dotenv.DotenvFlowConfigOptions | undefined
 ): dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult> => {
+  const outputOptions = {
+    ...options,
+    silent: options?.silent || true,
+    debug: options?.debug || false,
+  }
+  if (options?.silent) {
+    outputOptions.silent = true;
+  }
+  if (process.env['DOTENV_DEBUG'] === 'true') {
+    console.debug('Loading dotenv');
+    outputOptions.debug = true;
+  }
+
   const parseResult: dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult> = dotenv.config(options);
   if (process.env['NODE_ENV'] === 'development') {
     console.debug(`Loaded dotenv files: ${dotenv.listFiles().map(
