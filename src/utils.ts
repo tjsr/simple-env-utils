@@ -72,9 +72,9 @@ const loadEnvWithDebug = (
 ): dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult> => {
   const outputOptions = {
     ...options,
-    silent: options?.silent || true,
     debug: options?.debug || false,
-  }
+    silent: options?.silent || true,
+  };
   if (options?.silent) {
     outputOptions.silent = true;
   }
