@@ -73,9 +73,9 @@ const loadEnv = (
   const outputOptions = {
     ...options,
     debug: options?.debug || false,
-    silent: options?.silent || true,
     path: options?.path || process.env['DOTENV_FLOW_PATH'],
     pattern: options?.pattern || process.env['DOTENV_FLOW_PATTERN'],
+    silent: options?.silent || true,
   } as dotenv.DotenvFlowConfigOptions;
   if (options?.silent) {
     outputOptions.silent = true;
@@ -92,16 +92,8 @@ const loadEnv = (
     pattern: outputOptions.pattern || process.env['DOTENV_FLOW_PATTERN'],
   } as dotenv.DotenvFlowListFilesOptions;
 
-  let filesToLoad: string[] = dotenv.listFiles(listFilesOptions) || [];
-  let hasFilesToLoad: boolean = filesToLoad.length > 0;
-
-  // if (!hasFilesToLoad && process.env['ENV_FILE_LOCATION']) {
-  //   listFilesOptions.path = path.dirname(path.resolve(process.env['ENV_FILE_LOCATION']));
-  //   outputOptions.path = path.dirname(path.resolve(process.env['ENV_FILE_LOCATION']));
-  // }
-
-  // filesToLoad = dotenv.listFiles(listFilesOptions) || [];
-  // hasFilesToLoad = filesToLoad.length > 0;
+  const filesToLoad: string[] = dotenv.listFiles(listFilesOptions) || [];
+  const hasFilesToLoad: boolean = filesToLoad.length > 0;
 
   if (!hasFilesToLoad) {
     console.warn('Found no env files to load.');
