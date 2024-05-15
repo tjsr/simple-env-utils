@@ -14,6 +14,7 @@
     "build": "rimraf dist && tsc && tsc -p tsconfig.cjs.json",
     "check": "npx npm-check",
     "clean": "rimraf build dist coverage",
+    "clean:all": "rimraf build dist coverage node_modules",
     "lint": "eslint src/*.ts",
     "lint:fix": "eslint --fix src/*.ts",
     "prepack": "npm run lint && npm test && npm run build",

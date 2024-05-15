@@ -67,33 +67,57 @@ const booleanEnv = (key: string, defaultValue: boolean): boolean => {
   return process.env[key] === 'true' ? true : false;
 };
 
-const loadEnvWithDebug = (
+const loadEnv = (
   options?: dotenv.DotenvFlowConfigOptions | undefined
 ): dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult> => {
   const outputOptions = {
     ...options,
     debug: options?.debug || false,
     silent: options?.silent || true,
-  };
+    path: options?.path || process.env['DOTENV_FLOW_PATH'],
+    pattern: options?.pattern || process.env['DOTENV_FLOW_PATTERN'],
+  } as dotenv.DotenvFlowConfigOptions;
   if (options?.silent) {
     outputOptions.silent = true;
   }
   if (process.env['DOTENV_DEBUG'] === 'true') {
     console.debug('Loading dotenv');
     outputOptions.debug = true;
+  };
+
+  const listFilesOptions: dotenv.DotenvFlowListFilesOptions = {
+    debug: outputOptions.debug,
+    node_env: outputOptions.default_node_env,
+    path: outputOptions.path || process.env['DOTENV_FLOW_PATH'],
+    pattern: outputOptions.pattern || process.env['DOTENV_FLOW_PATTERN'],
+  } as dotenv.DotenvFlowListFilesOptions;
+
+  let filesToLoad: string[] = dotenv.listFiles(listFilesOptions) || [];
+  let hasFilesToLoad: boolean = filesToLoad.length > 0;
+
+  // if (!hasFilesToLoad && process.env['ENV_FILE_LOCATION']) {
+  //   listFilesOptions.path = path.dirname(path.resolve(process.env['ENV_FILE_LOCATION']));
+  //   outputOptions.path = path.dirname(path.resolve(process.env['ENV_FILE_LOCATION']));
+  // }
+
+  // filesToLoad = dotenv.listFiles(listFilesOptions) || [];
+  // hasFilesToLoad = filesToLoad.length > 0;
+
+  if (!hasFilesToLoad) {
+    console.warn('Found no env files to load.');
   }
 
-  const parseResult: dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult> = dotenv.config(options);
-  if (process.env['NODE_ENV'] === 'development') {
-    console.debug(`Loaded dotenv files: ${dotenv.listFiles().map(
+  const parseResult: dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult> = dotenv.config(outputOptions);
+  if (process.env['NODE_ENV'] === 'development' && hasFilesToLoad) {
+    console.debug(`Loaded dotenv files: ${filesToLoad.map(
       (file) => file.substring(file.lastIndexOf(path.sep + 1))).join(', ')}`);
   }
-  if (parseResult.error && dotenv.listFiles().length > 0) {
+  if (parseResult.error && hasFilesToLoad) {
     throw new Error('Error parsing dotenv file: ' + parseResult.error.message, parseResult.error);
   } else if (parseResult.error) {
-    console.debug('Error parsing dotenv file: ' + parseResult.error.message, parseResult.error);
+    console.debug('Error loading dotenv files - none in list to load: ' + parseResult.error.message, parseResult.error);
   }
   return parseResult;
 };
 
-export { requireEnv, setTestMode, isTestMode, intEnv, booleanEnv, loadEnvWithDebug, isProduction, setProductionMode };
+export { requireEnv, setTestMode, isTestMode, intEnv, booleanEnv, loadEnv, isProduction, setProductionMode };
