@@ -90,9 +90,17 @@ const loadEnv = (
     node_env: outputOptions.default_node_env,
     path: outputOptions.path || process.env['DOTENV_FLOW_PATH'],
     pattern: outputOptions.pattern || process.env['DOTENV_FLOW_PATTERN'],
+    silent: outputOptions.silent,
   } as dotenv.DotenvFlowListFilesOptions;
 
-  const filesToLoad: string[] = dotenv.listFiles(listFilesOptions) || [];
+  let filesToLoad: string[] = [];
+  try {
+    filesToLoad = [...dotenv.listFiles(listFilesOptions)];
+  } catch (err) {
+    if (!outputOptions.silent) {
+      console.error('Error listing dotenv files.', err);
+    }
+  }
   const hasFilesToLoad: boolean = filesToLoad.length > 0;
 
   if (!hasFilesToLoad) {
@@ -106,7 +114,7 @@ const loadEnv = (
   }
   if (parseResult.error && hasFilesToLoad) {
     throw new Error('Error parsing dotenv file: ' + parseResult.error.message, parseResult.error);
-  } else if (parseResult.error) {
+  } else if (parseResult.error && !outputOptions.silent) {
     console.debug('Error loading dotenv files - none in list to load: ' + parseResult.error.message, parseResult.error);
   }
   return parseResult;
