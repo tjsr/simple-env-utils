@@ -49,7 +49,7 @@
     "@tjsr/eslint-config": "github:tjsr/eslint-config#main",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.12",
-    "@typescript-eslint/eslint-plugin": "^7.9.0",
+    "@typescript-eslint/eslint-plugin": "^7.10.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^9.1.0",
     "rimraf": "^5.0.7",
