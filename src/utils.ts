@@ -44,7 +44,7 @@ const intEnv = (key: string, defaultValue?: number): number => {
   try {
     const intVal = parseInt(process.env[key]!);
     if (Number.isNaN(intVal)) {
-      console.warn(`Environment variable ${key} is not a valid int, using default value ${defaultValue}`);
+      console.warn(intEnv, `Environment variable ${key} is not a valid int, using default value ${defaultValue}`);
       if (defaultValue === undefined) {
         throw Error(`Environment variable ${key} is not a valid int and default is not set`);
       }
@@ -55,7 +55,7 @@ const intEnv = (key: string, defaultValue?: number): number => {
     if (defaultValue === undefined) {
       throw Error(`Environment variable ${key} is not a valid int and default is not set`);
     }
-    console.warn(`Environment variable ${key} is not a valid int, using default value ${defaultValue}`);
+    console.warn(intEnv, `Environment variable ${key} is not a valid int, using default value ${defaultValue}`);
     return defaultValue;
   }
 };
@@ -67,9 +67,46 @@ const booleanEnv = (key: string, defaultValue: boolean): boolean => {
   return process.env[key] === 'true' ? true : false;
 };
 
+const fileSetsLoaded: Map<string, dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult>> = new Map();
+
+type EnvFilesToLoadInfo = {
+  filesToLoad: string[]|undefined;
+  fileLoadString: string|undefined;
+  hasFilesToLoad: boolean;
+  error?: Error;
+  errorMessage?: string;
+};
+
+const getEnvFilesToLoad = (listFilesOptions: dotenv.DotenvFlowListFilesOptions, silent = true): EnvFilesToLoadInfo => {
+  let filesToLoad: string[]|undefined;
+  let fileLoadString: string|undefined;
+  let hasFilesToLoad: boolean = false;
+  
+  try {
+    filesToLoad = [...dotenv.listFiles(listFilesOptions)];
+    fileLoadString = filesToLoad.join(',');
+    hasFilesToLoad = !fileSetsLoaded.has(fileLoadString) && filesToLoad.length > 0;
+  } catch (err) {
+    const errorMessage: string = 'Error listing dotenv files.';
+    if (!silent) {
+      console.error(getEnvFilesToLoad, errorMessage, err);
+    }
+    return { errorMessage, hasFilesToLoad, filesToLoad, fileLoadString };
+  }
+
+  if (!hasFilesToLoad) {
+    const message = filesToLoad.length > 0 ? `Skipping loading ${filesToLoad.length} dotenv files as they have already been loaded: `
+      + fileLoadString : 
+    'Found no env files to load.';
+    console.debug(getEnvFilesToLoad, message);
+    return { errorMessage: message, hasFilesToLoad, filesToLoad, fileLoadString };
+  }
+  return { hasFilesToLoad, filesToLoad, fileLoadString };
+};
+
 const loadEnv = (
   options?: dotenv.DotenvFlowConfigOptions | undefined
-): dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult> => {
+): dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult> | undefined => {
   const outputOptions = {
     ...options,
     debug: options?.debug || false,
@@ -81,7 +118,7 @@ const loadEnv = (
     outputOptions.silent = true;
   }
   if (process.env['DOTENV_DEBUG'] === 'true') {
-    console.debug('Loading dotenv');
+    console.debug(loadEnv, 'Loading dotenv');
     outputOptions.debug = true;
   };
 
@@ -93,30 +130,27 @@ const loadEnv = (
     silent: outputOptions.silent,
   } as dotenv.DotenvFlowListFilesOptions;
 
-  let filesToLoad: string[] = [];
-  try {
-    filesToLoad = [...dotenv.listFiles(listFilesOptions)];
-  } catch (err) {
-    if (!outputOptions.silent) {
-      console.error('Error listing dotenv files.', err);
-    }
-  }
-  const hasFilesToLoad: boolean = filesToLoad.length > 0;
-
-  if (!hasFilesToLoad) {
-    console.warn('Found no env files to load.');
+  const fileLoadDetails: EnvFilesToLoadInfo = getEnvFilesToLoad(listFilesOptions, outputOptions.silent);
+  if (!fileLoadDetails.fileLoadString) {
+    throw new Error('Failed to load env files due to load string being undefined.');
+  } else if (fileLoadDetails.filesToLoad === undefined) {
+    throw new Error('Failed to load env files due to files to load list being undefined.');
+  } else if (fileLoadDetails.fileLoadString && !fileLoadDetails.hasFilesToLoad) {
+    return fileSetsLoaded.get(fileLoadDetails.fileLoadString);
   }
 
   const parseResult: dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult> = dotenv.config(outputOptions);
-  if (process.env['NODE_ENV'] === 'development' && hasFilesToLoad) {
-    console.debug(`Loaded dotenv files: ${filesToLoad.map(
+  if (process.env['NODE_ENV'] === 'development' && fileLoadDetails.hasFilesToLoad) {
+    console.debug(loadEnv, `Loaded dotenv files: ${fileLoadDetails.filesToLoad.map(
       (file) => file.substring(file.lastIndexOf(path.sep + 1))).join(', ')}`);
   }
-  if (parseResult.error && hasFilesToLoad) {
+  if (parseResult.error && fileLoadDetails.hasFilesToLoad) {
     throw new Error('Error parsing dotenv file: ' + parseResult.error.message, parseResult.error);
   } else if (parseResult.error && !outputOptions.silent) {
-    console.debug('Error loading dotenv files - none in list to load: ' + parseResult.error.message, parseResult.error);
+    console.debug(loadEnv, 'Error loading dotenv files - none in list to load: ' + parseResult.error.message, parseResult.error);
   }
+
+  fileSetsLoaded.set(fileLoadDetails.fileLoadString!, parseResult);
   return parseResult;
 };
 
