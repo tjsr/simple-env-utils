@@ -15,11 +15,12 @@
     "check": "npx npm-check",
     "clean": "rimraf build dist coverage",
     "clean:all": "rimraf build dist coverage node_modules",
+    "link": "npm link @tjsr/eslint-config",
     "lint": "eslint --config eslint.config.mjs src/*.ts",
     "lint:fix": "eslint --config eslint.config.mjs --fix src/*.ts",
     "prepack": "npm test && npm run build",
     "prepublishOnly": "npm run clean",
-    "test": "jest && eslint src/*.ts"
+    "test": "vitest --run && npm run lint"
   },
   "nodemonConfig": {
     "watch": [
@@ -45,18 +46,16 @@
   },
   "homepage": "https://github.com/tjsr/simple-env-utils#readme",
   "devDependencies": {
-    "@eslint/js": "^9.4.0",
     "@tjsr/eslint-config": "github:tjsr/eslint-config#main",
-    "@types/jest": "^29.5.12",
     "@types/node": "^20.14.2",
     "@typescript-eslint/eslint-plugin": "^7.12.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^9.1.0",
     "rimraf": "^5.0.7",
-    "ts-jest": "^29.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
-    "typescript-eslint": "^7.12.0"
+    "typescript-eslint": "^7.12.0",
+    "vitest": "^1.6.0"
   },
   "dependencies": {
     "dotenv-flow": "^4.1.0"

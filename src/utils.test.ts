@@ -1,6 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { booleanEnv, intEnv, isProduction, isTestMode, requireEnv, setTestMode } from "./utils.js";
-
-import { mock } from "node:test";
 
 describe('intEnv', () => {
   it('Should throw error if environment variable is not set', () => {
@@ -20,7 +19,7 @@ describe('intEnv', () => {
 
   it('Should return default value if environment variable is not a valid int', () => {
     // const originalWarn = console.warn;
-    console.warn = mock.fn((_fn: Function, str: string) => {
+    console.warn = vi.fn((_fn: Function, str: string) => {
       expect(str).toEqual("Environment variable TEST_ENV_VAR is not a valid int, using default value 123");
     });
     process.env['TEST_ENV_VAR'] = 'notanint';

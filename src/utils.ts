@@ -1,5 +1,7 @@
 import * as dotenv from 'dotenv-flow';
 
+import { EnvFilesToLoadInfo, fileSetsLoaded, getEnvFilesToLoad } from './getEnvFilesToLoad.js';
+
 import path from 'path';
 
 let TEST_MODE = false;
@@ -67,44 +69,6 @@ const booleanEnv = (key: string, defaultValue: boolean): boolean => {
   return process.env[key] === 'true' ? true : false;
 };
 
-const fileSetsLoaded: Map<string, dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult>> = new Map();
-
-type EnvFilesToLoadInfo = {
-  filesToLoad: string[]|undefined;
-  fileLoadString: string|undefined;
-  hasFilesToLoad: boolean;
-  error?: Error;
-  errorMessage?: string;
-};
-
-const getEnvFilesToLoad = (listFilesOptions: dotenv.DotenvFlowListFilesOptions, silent = true): EnvFilesToLoadInfo => {
-  let filesToLoad: string[]|undefined;
-  let fileLoadString: string|undefined;
-  let hasFilesToLoad: boolean = false;
-  
-  try {
-    filesToLoad = [...dotenv.listFiles(listFilesOptions)];
-    fileLoadString = filesToLoad.join(',');
-    hasFilesToLoad = !fileSetsLoaded.has(fileLoadString) && filesToLoad.length > 0;
-  } catch (err) {
-    const errorMessage: string = 'Error listing dotenv files.';
-    if (!silent) {
-      console.error(getEnvFilesToLoad, errorMessage, err);
-    }
-    return { errorMessage, fileLoadString, filesToLoad, hasFilesToLoad };
-  }
-
-  if (!hasFilesToLoad) {
-    const errorMessage = filesToLoad.length > 0
-      ? `Skipping loading ${filesToLoad.length} dotenv files as they have already been loaded: ` +
-      fileLoadString 
-      : 'Found no env files to load.';
-    console.debug(getEnvFilesToLoad, errorMessage);
-    return { errorMessage, fileLoadString, filesToLoad, hasFilesToLoad };
-  }
-  return { fileLoadString, filesToLoad, hasFilesToLoad };
-};
-
 const loadEnv = (
   options?: dotenv.DotenvFlowConfigOptions | undefined
 ): dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult> | undefined => {
@@ -132,7 +96,13 @@ const loadEnv = (
   } as dotenv.DotenvFlowListFilesOptions;
 
   const fileLoadDetails: EnvFilesToLoadInfo = getEnvFilesToLoad(listFilesOptions, outputOptions.silent);
-  if (!fileLoadDetails.fileLoadString) {
+  if (fileLoadDetails.error) {
+    throw fileLoadDetails.error;
+  } else if (fileLoadDetails.errorMessage) {
+    throw new Error(fileLoadDetails.errorMessage);
+  }
+
+  if (fileLoadDetails.fileLoadString === undefined) {
     throw new Error('Failed to load env files due to load string being undefined.');
   } else if (fileLoadDetails.filesToLoad === undefined) {
     throw new Error('Failed to load env files due to files to load list being undefined.');
