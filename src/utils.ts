@@ -91,17 +91,18 @@ const getEnvFilesToLoad = (listFilesOptions: dotenv.DotenvFlowListFilesOptions, 
     if (!silent) {
       console.error(getEnvFilesToLoad, errorMessage, err);
     }
-    return { errorMessage, hasFilesToLoad, filesToLoad, fileLoadString };
+    return { errorMessage, fileLoadString, filesToLoad, hasFilesToLoad };
   }
 
   if (!hasFilesToLoad) {
-    const message = filesToLoad.length > 0 ? `Skipping loading ${filesToLoad.length} dotenv files as they have already been loaded: `
-      + fileLoadString : 
-    'Found no env files to load.';
-    console.debug(getEnvFilesToLoad, message);
-    return { errorMessage: message, hasFilesToLoad, filesToLoad, fileLoadString };
+    const errorMessage = filesToLoad.length > 0
+      ? `Skipping loading ${filesToLoad.length} dotenv files as they have already been loaded: ` +
+      fileLoadString 
+      : 'Found no env files to load.';
+    console.debug(getEnvFilesToLoad, errorMessage);
+    return { errorMessage, fileLoadString, filesToLoad, hasFilesToLoad };
   }
-  return { hasFilesToLoad, filesToLoad, fileLoadString };
+  return { fileLoadString, filesToLoad, hasFilesToLoad };
 };
 
 const loadEnv = (
@@ -147,7 +148,8 @@ const loadEnv = (
   if (parseResult.error && fileLoadDetails.hasFilesToLoad) {
     throw new Error('Error parsing dotenv file: ' + parseResult.error.message, parseResult.error);
   } else if (parseResult.error && !outputOptions.silent) {
-    console.debug(loadEnv, 'Error loading dotenv files - none in list to load: ' + parseResult.error.message, parseResult.error);
+    console.debug(loadEnv, 'Error loading dotenv files - none in list to load: ' +
+      parseResult.error.message, parseResult.error);
   }
 
   fileSetsLoaded.set(fileLoadDetails.fileLoadString!, parseResult);
