@@ -10,13 +10,6 @@ export type RuntimeEnvMode = {
 
 type RunMode = keyof RuntimeEnvMode;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-interface process {
-  env: {
-    NODE_ENV: RunMode;
-  };
-}
-
 const RuntimeMode: RuntimeEnvMode = {
   development: process.env['NODE_ENV'] === 'development',
   production: process.env['NODE_ENV'] === 'production',
