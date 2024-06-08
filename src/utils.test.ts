@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { booleanEnv, intEnv, isProduction, isTestMode, requireEnv, setTestMode } from "./utils.js";
+import { booleanEnv, intEnv, isProductionMode, isTestMode, requireEnv, setTestMode } from "./utils.js";
 
 describe('intEnv', () => {
   it('Should throw error if environment variable is not set', () => {
@@ -81,23 +81,23 @@ describe('isProductionMode', () => {
   
   it('Should return false if NODE_ENV is not production', () => {
     process.env['NODE_ENV'] = 'development';
-    expect(isProduction()).toBe(false);
+    expect(isProductionMode()).toBe(false);
     process.env['NODE_ENV'] = 'test';
-    expect(isProduction()).toBe(false);
+    expect(isProductionMode()).toBe(false);
   });
 
   it('Defaulting to test mode, should return false', () => {
-    expect(isProduction()).toBe(false);
+    expect(isProductionMode()).toBe(false);
   });
 
   it('Should return false if NODE_ENV is test', () => {
     process.env['NODE_ENV'] = 'test';
-    expect(isProduction()).toBe(false);
+    expect(isProductionMode()).toBe(false);
   });
 
   it('Should return false if setTestMode has been called', () => {
     setTestMode();
-    expect(isProduction()).toBe(false);
+    expect(isProductionMode()).toBe(false);
   });
 });
 

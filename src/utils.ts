@@ -4,36 +4,11 @@ import { EnvFilesToLoadInfo, fileSetsLoaded, getEnvFilesToLoad } from './getEnvF
 
 import path from 'path';
 
-let TEST_MODE = false;
-let PRODUCTION_MODE = false;
-
 const requireEnv = (val: string): string => {
   if (process.env[val] === undefined) {
     throw Error(`${val} environment variable not set, which is required.`);
   }
   return process.env[val] as string;
-};
-
-const setTestMode = (mode = true): void => {
-  TEST_MODE = mode;
-};
-
-const setProductionMode = (mode = true): void => {
-  PRODUCTION_MODE = mode;
-};
-
-const isTestMode = (): boolean => {
-  if (TEST_MODE && PRODUCTION_MODE) {
-    throw new Error('Run mode can\'t be set as both test and production mode.');
-  }
-  return !isProduction() && (process.env['NODE_ENV'] === 'test' || TEST_MODE);
-};
-
-const isProduction = (): boolean => {
-  if (TEST_MODE && PRODUCTION_MODE) {
-    throw new Error('Run mode can\'t be set as both test and production mode.');
-  }
-  return process.env['NODE_ENV'] === 'production' || PRODUCTION_MODE;
 };
 
 const intEnv = (key: string, defaultValue?: number): number => {
@@ -126,4 +101,8 @@ const loadEnv = (
   return parseResult;
 };
 
-export { requireEnv, setTestMode, isTestMode, intEnv, booleanEnv, loadEnv, isProduction, setProductionMode };
+export { requireEnv, 
+  intEnv, booleanEnv, loadEnv }; 
+
+export {   isDevelopmentMode, isProductionMode, isTestMode,
+  setDevelopmentMode, setProductionMode, setTestMode } from './runmode.js';
