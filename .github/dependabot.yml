@@ -7,6 +7,7 @@ registries:
   npm-npmjs:
     type: npm-registry
     url: https://registry.npmjs.org
+    token: ${{secrets.DEPENDABOT_NPM_TOKEN}}
 updates:
   - package-ecosystem: 'npm'
     directory: '/'
