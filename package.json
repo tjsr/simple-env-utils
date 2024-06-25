@@ -48,15 +48,15 @@
   "homepage": "https://github.com/tjsr/simple-env-utils#readme",
   "devDependencies": {
     "@tjsr/eslint-config": "github:tjsr/eslint-config#main",
-    "@types/node": "^20.14.2",
-    "@typescript-eslint/eslint-plugin": "^7.13.0",
+    "@types/node": "^20.14.8",
+    "@typescript-eslint/eslint-plugin": "^7.14.1",
     "@vitest/coverage-v8": "^1.6.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^9.1.0",
     "rimraf": "^5.0.7",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5",
-    "typescript-eslint": "^7.13.0",
+    "typescript": "^5.5.2",
+    "typescript-eslint": "^7.14.1",
     "vitest": "^1.6.0"
   },
   "dependencies": {
