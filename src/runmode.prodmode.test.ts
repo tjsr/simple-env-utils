@@ -2,14 +2,13 @@ import {
   RuntimeEnvMode,
   copyRuntimeMode,
 } from './runmode.js';
-import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import {
   isProductionMode,
   isTestMode,
   setDevelopmentMode,
   setProductionMode,
   setTestMode
-} from "./utils.ts";
+} from "./utils.js";
 
 import { TestContext } from "node:test";
 

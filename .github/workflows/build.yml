@@ -10,7 +10,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@main
       with:
-        node-version: 20.12.2
+        node-version: 20.15.0
     
     - name: Check out repository code
       uses: actions/checkout@main
@@ -18,7 +18,7 @@ jobs:
     # Setup .npmrc file to publish to GitHub Packages
     - uses: actions/setup-node@v4
       with:
-        node-version: 20.12.2
+        node-version: 20.15.0
         registry-url: 'https://npm.pkg.github.com'
         # Defaults to the user or organization that owns the workflow file
         scope: '@tjsr'
