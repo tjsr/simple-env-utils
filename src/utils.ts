@@ -58,7 +58,7 @@ const loadEnv = (
     outputOptions.silent = true;
   }
   if (process.env['DOTENV_DEBUG'] === 'true') {
-    console.debug(loadEnv, 'Loading dotenv');
+    console.debug(loadEnv, `Loading dotenv with path ${outputOptions.path} and pattern ${outputOptions.pattern}`);
     outputOptions.debug = true;
   };
 

@@ -5,3 +5,4 @@ dist
 build
 *.tgz
 *.log
+src/cryptedValues.ts

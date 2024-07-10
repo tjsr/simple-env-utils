@@ -1,8 +1,8 @@
 import * as dotenv from 'dotenv-flow';
 
-import { TestContext, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { TestContext, vi } from 'vitest';
 
-import { getEnvFilesToLoad } from "./getEnvFilesToLoad.ts";
+import { getEnvFilesToLoad } from "./getEnvFilesToLoad.js";
 
 type EnvFileTestContext = {
   // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any

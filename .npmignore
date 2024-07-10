@@ -2,3 +2,5 @@
 build/**/*
 .github
 vitest.config.ts.timestamp-*
+.vscode/**/*
+.npmcheckrc
