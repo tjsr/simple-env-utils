@@ -4,3 +4,6 @@ build/**/*
 vitest.config.ts.timestamp-*
 .vscode/**/*
 .npmcheckrc
+tsconfig.json
+tsconfig.*.json
+**/*.test.ts
