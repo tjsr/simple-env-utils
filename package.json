@@ -11,7 +11,8 @@
     "require": "./dist/cjs/utils.js"
   },
   "scripts": {
-    "build": "rimraf dist && tsc && tsc -p tsconfig.cjs.json",
+    "build": "rimraf dist && tsc",
+    "build:dist": "rimraf dist && tsc -p tsconfig.publish.json && tsc -p tsconfig.cjs.json",
     "check": "npx npm-check",
     "clean": "rimraf build dist coverage",
     "clean:all": "rimraf build dist coverage node_modules",
@@ -26,11 +27,14 @@
   "nodemonConfig": {
     "watch": [
       "src",
-      "package.json"
+      "package.json",
+      "tsconfig.json",
+      "tsconfig.publish.json",
+      "tsconfig.cjs.json"
     ],
     "ext": "ts",
-    "ignore": "dist",
-    "exec": "tsc && tsc -p tsconfig.cjs.json",
+    "ignore": [ "dist", "build" ],
+    "exec": "tsc",
     "delay": 200
   },
   "repository": {
