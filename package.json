@@ -12,6 +12,7 @@
   },
   "scripts": {
     "build": "rimraf dist && tsc",
+    "build:dev": "linkteam && tsc -w",
     "build:dist": "rimraf dist && tsc -p tsconfig.publish.json && tsc -p tsconfig.cjs.json",
     "check": "npx npm-check",
     "clean": "rimraf build dist coverage",
@@ -33,7 +34,10 @@
       "tsconfig.cjs.json"
     ],
     "ext": "ts",
-    "ignore": [ "dist", "build" ],
+    "ignore": [
+      "dist",
+      "build"
+    ],
     "exec": "tsc",
     "delay": 200
   },
@@ -52,8 +56,8 @@
   "homepage": "https://github.com/tjsr/simple-env-utils#readme",
   "devDependencies": {
     "@tjsr/eslint-config": "github:tjsr/eslint-config#main",
-    "@tjsr/fs-utils": "^0.0.5",
-    "@tjsr/testutils": "^0.0.6",
+    "@tjsr/fs-utils": "^0.0.8",
+    "@tjsr/testutils": "^0.0.8",
     "@types/node": "^20.14.10",
     "@vitest/coverage-v8": "^1.6.0",
     "eslint-config-google": "^0.14.0",
