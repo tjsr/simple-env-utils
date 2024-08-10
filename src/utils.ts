@@ -4,9 +4,11 @@ import { EnvFilesToLoadInfo, fileSetsLoaded, getEnvFilesToLoad } from './getEnvF
 
 import path from 'path';
 
-const requireEnv = (val: string): string => {
+const requireEnv = (val: string, helperMessage?: string): string => {
   if (process.env[val] === undefined) {
-    throw Error(`${val} environment variable not set, which is required.`);
+    const message = `${val} environment variable not set, which is required.` + 
+      (helperMessage ? '\n' + helperMessage : '');
+    throw Error(message);
   }
   return process.env[val] as string;
 };
@@ -50,9 +52,9 @@ const loadEnv = (
   const outputOptions = {
     ...options,
     debug: options?.debug || false,
-    path: options?.path || process.env['DOTENV_FLOW_PATH'],
+    path: options?.path || process.env['DOTENV_FLOW_PATH'] || process.cwd(),
     pattern: options?.pattern || process.env['DOTENV_FLOW_PATTERN'],
-    silent: options?.silent || true,
+    silent: options?.silent || (process.env['DOTENV_SILENT'] === 'false' ? false : true),
   } as dotenv.DotenvFlowConfigOptions;
   if (options?.silent) {
     outputOptions.silent = true;
