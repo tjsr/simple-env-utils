@@ -21,6 +21,10 @@ on:
         description: 'Do not publish'
         default: false
         type: boolean
+      usePr:
+        description: 'Force use of PR on parent branch to raise changes.'
+        default: false
+        type: boolean
   
 permissions:
   contents: write
@@ -69,7 +73,7 @@ jobs:
           no-tag: ${{ inputs.noTag }}
           no-publish: ${{ inputs.noPublish }}
           preid: ${{ github.ref != 'refs/head/main' && 'dev' || 'release' }}
-          requiresPr: ${{ github.ref != 'refs/head/main' && 'true' || 'false' }}
+          requiresPr: ${{ ( usePr == 'true' || github.ref != 'refs/head/main' ) && 'true' || 'false' }}
 
       - name: "Confirm published: ${{ steps.bump.outputs.version }}"
         if: ${{ steps.bump.conclusion == 'success' }}
