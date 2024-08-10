@@ -73,7 +73,7 @@ jobs:
           no-tag: ${{ inputs.noTag }}
           no-publish: ${{ inputs.noPublish }}
           preid: ${{ github.ref != 'refs/head/main' && 'dev' || 'release' }}
-          requiresPr: ${{ ( usePr == 'true' || github.ref != 'refs/head/main' ) && 'true' || 'false' }}
+          requiresPr: ${{ ( inputs.usePr == 'true' || github.ref != 'refs/head/main' ) && 'true' || 'false' }}
 
       - name: "Confirm published: ${{ steps.bump.outputs.version }}"
         if: ${{ steps.bump.conclusion == 'success' }}
