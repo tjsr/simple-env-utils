@@ -20,7 +20,7 @@
     "link": "npm link @tjsr/eslint-config",
     "lint": "eslint --config eslint.config.mjs src/*.ts",
     "lint:fix": "eslint --config eslint.config.mjs --fix src/*.ts",
-    "prepack": "npm test && npm run build",
+    "prepack": "npm test && npm run build:dist",
     "prepublishOnly": "npm run clean",
     "test": "vitest --run && npm run lint",
     "test:coverage": "vitest run --coverage"
