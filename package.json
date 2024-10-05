@@ -8,12 +8,12 @@
   "type": "module",
   "exports": {
     "import": "./dist/esm/utils.js",
-    "require": "./dist/cjs/utils.js"
+    "require": "./dist/cjs/utils.cjs"
   },
   "scripts": {
     "build": "rimraf dist && tsc",
     "build:dev": "linkteam && tsc -w",
-    "build:dist": "rimraf dist && tsc -p tsconfig.publish.json && tsc -p tsconfig.cjs.json",
+    "build:dist": "rimraf dist && tsc -p tsconfig.publish.json && tsc -p tsconfig.cjs.json && rewrite-cjs dist/cjs",
     "check": "npx npm-check",
     "clean": "rimraf build dist coverage",
     "clean:all": "rimraf build dist coverage node_modules",
@@ -62,6 +62,7 @@
     "@vitest/coverage-v8": "^1.6.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^9.1.0",
+    "rewrite-cjs-esm-paths": "^1.0.3",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4",
