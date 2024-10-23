@@ -46,6 +46,22 @@ const booleanEnv = (key: string, defaultValue: boolean): boolean => {
   return process.env[key] === 'true' ? true : false;
 };
 
+const isSilent = (
+  silentOption: boolean | undefined,
+  envOption: string | boolean | undefined
+): boolean => {
+  if (silentOption !== undefined) {
+    return silentOption;
+  }
+  if (envOption === 'false' || envOption === false) {
+    return false;
+  }
+  if (envOption === 'true' || envOption === true) {
+    return true;
+  }
+  return true;
+};
+
 const loadEnv = (
   options?: dotenv.DotenvFlowConfigOptions | undefined
 ): dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult> | undefined => {
@@ -54,7 +70,7 @@ const loadEnv = (
     debug: options?.debug || false,
     path: options?.path || process.env['DOTENV_FLOW_PATH'] || process.cwd(),
     pattern: options?.pattern || process.env['DOTENV_FLOW_PATTERN'],
-    silent: options?.silent || (process.env['DOTENV_SILENT'] === 'false' ? false : true),
+    silent: isSilent(options?.silent, process.env['DOTENV_SILENT']),
   } as dotenv.DotenvFlowConfigOptions;
   if (options?.silent) {
     outputOptions.silent = true;
@@ -63,7 +79,7 @@ const loadEnv = (
     console.debug(loadEnv, `Loading dotenv with path ${outputOptions.path} and pattern ${outputOptions.pattern}`);
     outputOptions.debug = true;
   };
-
+  
   const listFilesOptions: dotenv.DotenvFlowListFilesOptions = {
     debug: outputOptions.debug,
     node_env: outputOptions.default_node_env,
@@ -88,10 +104,19 @@ const loadEnv = (
   }
 
   const parseResult: dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult> = dotenv.config(outputOptions);
-  if (process.env['NODE_ENV'] === 'development' && fileLoadDetails.hasFilesToLoad) {
-    console.debug(loadEnv, `Loaded dotenv files: ${fileLoadDetails.filesToLoad.map(
+  const outputLoadedFileTo = outputOptions.silent
+    ? console.log
+    : process.env['NODE_ENV'] === 'development' || outputOptions.debug
+      ? console.debug : undefined;
+
+  if (outputLoadedFileTo && fileLoadDetails.hasFilesToLoad) {
+    outputLoadedFileTo(loadEnv, `Loaded dotenv files: ${fileLoadDetails.filesToLoad.map(
       (file) => file.substring(file.lastIndexOf(path.sep + 1))).join(', ')}`);
+  } else if (outputLoadedFileTo && !fileLoadDetails.hasFilesToLoad) {
+    outputLoadedFileTo(loadEnv,
+      `dotenv files list found no files to load from pattern ${listFilesOptions.pattern} in ${listFilesOptions.path}.`);
   }
+
   if (parseResult.error && fileLoadDetails.hasFilesToLoad) {
     throw new Error('Error parsing dotenv file: ' + parseResult.error.message, parseResult.error);
   } else if (parseResult.error && !outputOptions.silent) {

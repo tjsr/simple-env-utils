@@ -21,6 +21,7 @@ export const getEnvFilesToLoad = (
     filesToLoad = [...dotenv.listFiles(listFilesOptions)];
     fileLoadString = filesToLoad.join(',');
     hasFilesToLoad = !fileSetsLoaded.has(fileLoadString) && filesToLoad.length > 0;
+    console.log(getEnvFilesToLoad, 'Loaded env files:', JSON.stringify(listFilesOptions), filesToLoad, hasFilesToLoad);
   } catch (err) {
     const errorMessage: string = 'Error listing dotenv files.';
     if (!silent) {
