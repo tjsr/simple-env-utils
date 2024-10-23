@@ -4,6 +4,8 @@ import { EnvFilesToLoadInfo, fileSetsLoaded, getEnvFilesToLoad } from './getEnvF
 
 import path from 'path';
 
+let loadOptions: SimpleEnvOptions|undefined = undefined;
+
 const requireEnv = (val: string, helperMessage?: string): string => {
   if (process.env[val] === undefined) {
     const message = `${val} environment variable not set, which is required.` + 
@@ -62,6 +64,14 @@ const isSilent = (
   return true;
 };
 
+type SimpleEnvOptions = dotenv.DotenvFlowConfigOptions & {
+  allowMultipleLoads?: boolean;
+}
+
+export const isEnvLoaded = (): boolean => {
+  return loadOptions !== undefined;
+};
+
 const loadEnv = (
   options?: dotenv.DotenvFlowConfigOptions | undefined
 ): dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult> | undefined => {
@@ -71,10 +81,17 @@ const loadEnv = (
     path: options?.path || process.env['DOTENV_FLOW_PATH'] || process.cwd(),
     pattern: options?.pattern || process.env['DOTENV_FLOW_PATTERN'],
     silent: isSilent(options?.silent, process.env['DOTENV_SILENT']),
-  } as dotenv.DotenvFlowConfigOptions;
+  } as SimpleEnvOptions;
   if (options?.silent) {
     outputOptions.silent = true;
   }
+
+  if (outputOptions.allowMultipleLoads !== true && loadOptions !== undefined) {
+    throw new Error('loadEnv called multiple times without allowMultipleLoads set to true.');
+  }
+
+  loadOptions = outputOptions;
+
   if (process.env['DOTENV_DEBUG'] === 'true') {
     console.debug(loadEnv, `Loading dotenv with path ${outputOptions.path} and pattern ${outputOptions.pattern}`);
     outputOptions.debug = true;
