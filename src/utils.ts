@@ -4,6 +4,8 @@ import { EnvFilesToLoadInfo, fileSetsLoaded, getEnvFilesToLoad } from './getEnvF
 
 import path from 'path';
 
+let loadOptions: SimpleEnvOptions|undefined = undefined;
+
 const requireEnv = (val: string, helperMessage?: string): string => {
   if (process.env[val] === undefined) {
     const message = `${val} environment variable not set, which is required.` + 
@@ -46,6 +48,30 @@ const booleanEnv = (key: string, defaultValue: boolean): boolean => {
   return process.env[key] === 'true' ? true : false;
 };
 
+const isSilent = (
+  silentOption: boolean | undefined,
+  envOption: string | boolean | undefined
+): boolean => {
+  if (silentOption !== undefined) {
+    return silentOption;
+  }
+  if (envOption === 'false' || envOption === false) {
+    return false;
+  }
+  if (envOption === 'true' || envOption === true) {
+    return true;
+  }
+  return true;
+};
+
+type SimpleEnvOptions = dotenv.DotenvFlowConfigOptions & {
+  allowMultipleLoads?: boolean;
+}
+
+export const isEnvLoaded = (): boolean => {
+  return loadOptions !== undefined;
+};
+
 const loadEnv = (
   options?: dotenv.DotenvFlowConfigOptions | undefined
 ): dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult> | undefined => {
@@ -54,16 +80,23 @@ const loadEnv = (
     debug: options?.debug || false,
     path: options?.path || process.env['DOTENV_FLOW_PATH'] || process.cwd(),
     pattern: options?.pattern || process.env['DOTENV_FLOW_PATTERN'],
-    silent: options?.silent || (process.env['DOTENV_SILENT'] === 'false' ? false : true),
-  } as dotenv.DotenvFlowConfigOptions;
+    silent: isSilent(options?.silent, process.env['DOTENV_SILENT']),
+  } as SimpleEnvOptions;
   if (options?.silent) {
     outputOptions.silent = true;
   }
+
+  if (outputOptions.allowMultipleLoads !== true && loadOptions !== undefined) {
+    throw new Error('loadEnv called multiple times without allowMultipleLoads set to true.');
+  }
+
+  loadOptions = outputOptions;
+
   if (process.env['DOTENV_DEBUG'] === 'true') {
     console.debug(loadEnv, `Loading dotenv with path ${outputOptions.path} and pattern ${outputOptions.pattern}`);
     outputOptions.debug = true;
   };
-
+  
   const listFilesOptions: dotenv.DotenvFlowListFilesOptions = {
     debug: outputOptions.debug,
     node_env: outputOptions.default_node_env,
@@ -88,10 +121,19 @@ const loadEnv = (
   }
 
   const parseResult: dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult> = dotenv.config(outputOptions);
-  if (process.env['NODE_ENV'] === 'development' && fileLoadDetails.hasFilesToLoad) {
-    console.debug(loadEnv, `Loaded dotenv files: ${fileLoadDetails.filesToLoad.map(
+  const outputLoadedFileTo = outputOptions.silent
+    ? console.log
+    : process.env['NODE_ENV'] === 'development' || outputOptions.debug
+      ? console.debug : undefined;
+
+  if (outputLoadedFileTo && fileLoadDetails.hasFilesToLoad) {
+    outputLoadedFileTo(loadEnv, `Loaded dotenv files: ${fileLoadDetails.filesToLoad.map(
       (file) => file.substring(file.lastIndexOf(path.sep + 1))).join(', ')}`);
+  } else if (outputLoadedFileTo && !fileLoadDetails.hasFilesToLoad) {
+    outputLoadedFileTo(loadEnv,
+      `dotenv files list found no files to load from pattern ${listFilesOptions.pattern} in ${listFilesOptions.path}.`);
   }
+
   if (parseResult.error && fileLoadDetails.hasFilesToLoad) {
     throw new Error('Error parsing dotenv file: ' + parseResult.error.message, parseResult.error);
   } else if (parseResult.error && !outputOptions.silent) {
