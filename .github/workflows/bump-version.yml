@@ -38,7 +38,7 @@ jobs:
       NODE_VERSION: ${{ vars.NODE_VERSION }}
       NPM_VERSION: ${{ vars.NPM_VERSION }}
       NODE_AUTH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-      USE_PR: ${{ ( inputs.usePr == 'true' || github.ref == 'refs/heads/main' ) && 'true' || 'false' }}
+      USE_PR: ${{ ( inputs.usePr == true || github.ref == 'refs/heads/main' ) && true || false }}
     
     runs-on: ubuntu-latest
     steps:
