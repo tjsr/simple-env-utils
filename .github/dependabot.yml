@@ -3,9 +3,16 @@ registries:
   npm-github:
     type: npm-registry
     url: https://npm.pkg.github.com
-    token: ${{ secrets.GITHUB_TOKEN }}
+    token: ${{ github.token }}
+  npm-npmjs:
+    type: npm-registry
+    url: https://registry.npmjs.org
+    token: ${{ secrets.NPM_TOKEN }}
 updates:
   - package-ecosystem: 'npm'
+    registries:
+      - npm-github
+      - npm-npmjs
     directory: '/'
     registries:
     - npm-github
