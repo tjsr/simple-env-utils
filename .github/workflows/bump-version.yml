@@ -38,9 +38,15 @@ jobs:
       NODE_VERSION: ${{ vars.NODE_VERSION }}
       NPM_VERSION: ${{ vars.NPM_VERSION }}
       NODE_AUTH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      USE_PR: ${{ ( inputs.usePr == true || github.ref == 'refs/heads/main' ) && true || false }}
     
     runs-on: ubuntu-latest
     steps:
+      - name: Debug output
+        run: |
+          echo "inputs.usePr: ${{ inputs.usePr }}"
+          echo "github.ref : ${{ github.ref }}"
+          echo "USE_PR: ${{ env.USE_PR }}"
       - name: Verify inputs
         run: |
           if [ -z "${{ inputs.patchlevel }}" ]; then
@@ -73,7 +79,7 @@ jobs:
           no-tag: ${{ inputs.noTag }}
           no-publish: ${{ inputs.noPublish }}
           preid: ${{ github.ref != 'refs/heads/main' && 'dev' || 'release' }}
-          requiresPr: ${{ ( inputs.usePr == 'true' || github.ref != 'refs/heads/main' ) && 'true' || 'false' }}
+          requiresPr: ${{ env.USE_PR }}
 
       - name: "Confirm published: ${{ steps.bump.outputs.version }}"
         if: ${{ steps.bump.conclusion == 'success' }}
