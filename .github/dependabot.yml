@@ -10,6 +10,9 @@ registries:
     token: ${{ secrets.NPM_TOKEN }}
 updates:
   - package-ecosystem: 'npm'
+    registries:
+      - npm-github
+      - npm-npmjs
     directory: '/'
     registries:
     - npm-github
