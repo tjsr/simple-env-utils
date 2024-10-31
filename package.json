@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "rimraf dist && tsc",
-    "build:dev": "linkteam && tsc -w",
+    "build:dev": "linkteam -i && tsc -w",
     "build:dist": "rimraf dist && tsc -p tsconfig.publish.json && tsc -p tsconfig.cjs.json && rewrite-cjs dist/cjs",
     "check": "npx npm-check",
     "clean": "rimraf build dist coverage",
@@ -59,14 +59,14 @@
     "@tjsr/fs-utils": "^0.0.8",
     "@tjsr/testutils": "^0.0.8",
     "@types/node": "^20.14.10",
-    "@vitest/coverage-v8": "^1.6.0",
+    "@vitest/coverage-v8": "^2.1.4",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^9.1.0",
     "rewrite-cjs-esm-paths": "^1.0.3",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4",
-    "vitest": "^1.6.0"
+    "vitest": "^2.1.4"
   },
   "dependencies": {
     "dotenv-flow": "^4.1.0"
