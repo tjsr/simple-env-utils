@@ -32,7 +32,8 @@ const intEnv = (key: string, defaultValue?: number): number => {
       return defaultValue;
     }  
     return intVal;
-  } catch (e) {
+    // eslint-disable-next-line no-unused-vars
+  } catch (_e) {
     if (defaultValue === undefined) {
       throw Error(`Environment variable ${key} is not a valid int and default is not set`);
     }
