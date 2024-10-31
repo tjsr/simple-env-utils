@@ -1,5 +1,5 @@
 name: Build simple-env-utils
-run-name: ${{ github.actor }} Running simple-env-utils build.
+run-name: Running simple-env-utils build.
 on: [push]
 jobs:
   build-simple-env-utils:
