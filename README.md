@@ -20,6 +20,11 @@ The workflow files for this repo require the NODE_VERSION and NPM_VERSION var to
   gh variable set NPM_VERSION -b "10.8.2"
 ```
 
+## Dependabot
+
+The repo will requires an NPM_TOKEN to update npm dependencies using dependabot.  
+`gh secret set NPM_TOKEN --app dependabot --body "$NPM_TOKEN"`
+
 ## Contact
 
 For details, questions, or requests, contact Tim Rowe <tim@tjsr.id.au>
