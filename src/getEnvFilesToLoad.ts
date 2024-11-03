@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv-flow';
+
 export const fileSetsLoaded: Map<string, dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult>> = new Map();
 
 export type EnvFilesToLoadInfo = {
@@ -21,7 +22,10 @@ export const getEnvFilesToLoad = (
     filesToLoad = [...dotenv.listFiles(listFilesOptions)];
     fileLoadString = filesToLoad.join(',');
     hasFilesToLoad = !fileSetsLoaded.has(fileLoadString) && filesToLoad.length > 0;
-    console.log(getEnvFilesToLoad, 'Loaded env files:', JSON.stringify(listFilesOptions), filesToLoad, hasFilesToLoad);
+    if (!silent && hasFilesToLoad) {
+      console.log(getEnvFilesToLoad,
+        'Loaded env files:', filesToLoad);
+    }
   } catch (err) {
     const errorMessage: string = 'Error listing dotenv files.';
     if (!silent) {
