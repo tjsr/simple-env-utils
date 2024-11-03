@@ -123,7 +123,7 @@ const loadEnv = (
 
   const parseResult: dotenv.DotenvFlowConfigResult<dotenv.DotenvFlowParseResult> = dotenv.config(outputOptions);
   const outputLoadedFileTo = outputOptions.silent
-    ? console.log
+    ? undefined
     : process.env['NODE_ENV'] === 'development' || outputOptions.debug
       ? console.debug : undefined;
 
