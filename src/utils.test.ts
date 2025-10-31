@@ -19,7 +19,7 @@ describe('intEnv', () => {
 
   it('Should return default value if environment variable is not a valid int', () => {
     // const originalWarn = console.warn;
-    console.warn = vi.fn((_fn: Function, str: string) => {
+    console.warn = vi.fn((_fn: unknown, str: string): void => {
       expect(str).toEqual("Environment variable TEST_ENV_VAR is not a valid int, using default value 123");
     });
     process.env['TEST_ENV_VAR'] = 'notanint';
