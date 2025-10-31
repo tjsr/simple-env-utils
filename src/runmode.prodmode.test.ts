@@ -1,7 +1,7 @@
 import {
   RuntimeEnvMode,
   copyRuntimeMode,
-} from './runmode.js';
+} from './runmode.ts';
 import {
   isProductionMode,
   isTestMode,

@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv-flow';
 
-import { EnvFilesToLoadInfo, fileSetsLoaded, getEnvFilesToLoad } from './getEnvFilesToLoad.js';
+import { EnvFilesToLoadInfo, fileSetsLoaded, getEnvFilesToLoad } from './getEnvFilesToLoad.ts';
 
 import path from 'path';
 
@@ -150,4 +150,4 @@ export { requireEnv,
   intEnv, booleanEnv, loadEnv }; 
 
 export {   isDevelopmentMode, isProductionMode, isTestMode,
-  setDevelopmentMode, setProductionMode, setTestMode } from './runmode.js';
+  setDevelopmentMode, setProductionMode, setTestMode } from './runmode.ts';
