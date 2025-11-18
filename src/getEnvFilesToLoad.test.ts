@@ -5,7 +5,7 @@ import { TestContext, vi } from 'vitest';
 import { getEnvFilesToLoad } from "./getEnvFilesToLoad.js";
 
 type EnvFileTestContext = {
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   debug: { (...data: any[]): void; (message?: any, ...optionalParams: any[]): void; };
 } & TestContext;
 
