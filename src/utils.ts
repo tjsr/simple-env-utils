@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv-flow';
 
-import { EnvFilesToLoadInfo, fileSetsLoaded, getEnvFilesToLoad } from './getEnvFilesToLoad.js';
+import { EnvFilesToLoadInfo, fileSetsLoaded, getEnvFilesToLoad } from './getEnvFilesToLoad.ts';
 
 import path from 'path';
 
@@ -32,8 +32,7 @@ const intEnv = (key: string, defaultValue?: number): number => {
       return defaultValue;
     }  
     return intVal;
-    // eslint-disable-next-line no-unused-vars
-  } catch (_e) {
+  } catch (_e: Error | unknown) {
     if (defaultValue === undefined) {
       throw Error(`Environment variable ${key} is not a valid int and default is not set`);
     }
@@ -150,4 +149,4 @@ export { requireEnv,
   intEnv, booleanEnv, loadEnv }; 
 
 export {   isDevelopmentMode, isProductionMode, isTestMode,
-  setDevelopmentMode, setProductionMode, setTestMode } from './runmode.js';
+  setDevelopmentMode, setProductionMode, setTestMode } from './runmode.ts';

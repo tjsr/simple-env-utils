@@ -1,4 +1,4 @@
-import { loadEnv, setTestMode } from './utils.js';
+import { loadEnv, setTestMode } from './utils.ts';
 
 loadEnv({ silent: true });
 
