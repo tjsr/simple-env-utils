@@ -64,7 +64,7 @@
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^10.1.5",
     "rewrite-cjs-esm-paths": "^1.0.3",
-    "rimraf": "^6.1.0",
+    "rimraf": "^6.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "vitest": "^4.0.10"
