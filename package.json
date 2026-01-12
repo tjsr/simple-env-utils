@@ -59,7 +59,7 @@
     "@tjsr/eslint-config": "github:tjsr/eslint-config#main",
     "@tjsr/fs-utils": "^0.0.8",
     "@tjsr/testutils": "^0.0.11",
-    "@types/node": "^24.10.4",
+    "@types/node": "^24.10.7",
     "@vitest/coverage-v8": "^4.0.16",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^10.1.5",
