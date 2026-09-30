@@ -12,12 +12,13 @@ It includes:
 
 ## Repo configuration
 
-The workflow files for this repo require the NODE_VERSION and NPM_VERSION var to be specified.
+The workflow files for this repo require the `NODE_VERSION`, `NPM_VERSION`, and `TYPESCRIPT_VERSION` GitHub Actions variables. Keep these variables aligned with the versions declared in `package.json` and `package-lock.json`.
 
 ```bash
-  gh auth login
-  gh variable set NODE_VERSION -b "20.15.1"
-  gh variable set NPM_VERSION -b "10.8.2"
+gh auth login
+gh variable set NODE_VERSION -b "24.21.0"
+gh variable set NPM_VERSION -b "12.1.0"
+gh variable set TYPESCRIPT_VERSION -b "7.0.2"
 ```
 
 ## Dependabot

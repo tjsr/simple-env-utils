@@ -6,3 +6,4 @@ build
 *.tgz
 *.log
 src/cryptedValues.ts
+.npm-cache/

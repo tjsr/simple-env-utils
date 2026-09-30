@@ -2,7 +2,7 @@ import { defineConfig } from 'vitest/config';
 import { findPackageJson } from '@tjsr/testutils';
 import path from 'path';
 
-const packageJsonLocation = path.dirname(findPackageJson(__dirname));
+const packageJsonLocation = path.dirname(findPackageJson(import.meta.dirname));
 const setupFilesPath = path.resolve(packageJsonLocation, 'src/setup-tests.ts');
 
 export default defineConfig({
