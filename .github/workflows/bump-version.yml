@@ -37,6 +37,7 @@ jobs:
       NODE_CACHE_KEY: "npm-cache-${{ github.run_id }}-${{ github.run_number }}"
       NODE_VERSION: ${{ vars.NODE_VERSION }}
       NPM_VERSION: ${{ vars.NPM_VERSION }}
+      TYPESCRIPT_VERSION: ${{ vars.TYPESCRIPT_VERSION }}
       NODE_AUTH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
       USE_PR: ${{ ( inputs.usePr == true || github.ref == 'refs/heads/main' ) && true || false }}
     

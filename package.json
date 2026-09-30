@@ -6,6 +6,11 @@
   "module": "dist/esm/utils.js",
   "types": "dist/esm/utils.d.ts",
   "type": "module",
+  "engines": {
+    "node": ">=24.21.0",
+    "npm": ">=12.1.0"
+  },
+  "packageManager": "npm@12.1.0",
   "exports": {
     "import": "./dist/esm/utils.js",
     "require": "./dist/cjs/utils.cjs"
@@ -18,8 +23,8 @@
     "clean": "rimraf build dist coverage",
     "clean:all": "rimraf build dist coverage node_modules",
     "link": "npm link @tjsr/eslint-config",
-    "lint": "eslint --config eslint.config.mjs src/*.ts",
-    "lint:fix": "eslint --config eslint.config.mjs --fix src/*.ts",
+    "lint": "node --require ./scripts/eslint-typescript-compat.cjs ./node_modules/eslint/bin/eslint.js --config eslint.config.mjs src/*.ts",
+    "lint:fix": "node --require ./scripts/eslint-typescript-compat.cjs ./node_modules/eslint/bin/eslint.js --config eslint.config.mjs --fix src/*.ts",
     "prepack": "npm test && npm run build:dist",
     "prepublishOnly": "npm run clean",
     "test": "vitest --run && npm run lint",
@@ -66,7 +71,7 @@
     "rewrite-cjs-esm-paths": "^1.0.3",
     "rimraf": "^6.1.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3",
+    "typescript": "^7.0.2",
     "vitest": "^4.0.10"
   },
   "dependencies": {
@@ -79,5 +84,9 @@
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
+  },
+  "allowScripts": {
+    "esbuild@0.21.5": true,
+    "esbuild@0.27.2": true
   }
 }

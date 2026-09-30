@@ -14,9 +14,6 @@ updates:
       - npm-github
       - npm-npmjs
     directory: '/'
-    registries:
-    - npm-github
-    - npm-npmjs
     schedule:
       interval: 'weekly'
     ignore:
