@@ -12,13 +12,21 @@
   },
   "packageManager": "npm@12.1.0",
   "exports": {
-    "import": "./dist/esm/utils.js",
-    "require": "./dist/cjs/utils.cjs"
+    ".": {
+      "import": {
+        "types": "./dist/esm/utils.d.ts",
+        "default": "./dist/esm/utils.js"
+      },
+      "require": {
+        "types": "./dist/esm/utils.d.ts",
+        "default": "./dist/cjs/utils.cjs"
+      }
+    }
   },
   "scripts": {
     "build": "rimraf dist && tsc",
     "build:dev": "linkteam -i && tsc -w",
-    "build:dist": "rimraf dist && tsc -p tsconfig.publish.json && tsc -p tsconfig.cjs.json && rewrite-cjs dist/cjs",
+    "build:dist": "rimraf dist && tsc -p tsconfig.publish.json && tsc -p tsconfig.cjs.json && node scripts/rewrite-dts-imports.cjs dist && rewrite-cjs dist/cjs",
     "check": "npx npm-check",
     "clean": "rimraf build dist coverage",
     "clean:all": "rimraf build dist coverage node_modules",
