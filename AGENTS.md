@@ -9,3 +9,18 @@
 - After changing dependencies, regenerate `package-lock.json` with npm 12.1.0 and verify `npm ci`, `npm test`, and `npm run build`.
 - Private GitHub Packages need `NODE_AUTH_TOKEN` in CI; retain the scoped registry configuration and npm 12's `allow-git=root` setting in `.npmrc`.
 - Dependabot must retain both named registries in `.github/dependabot.yml`: `npm-github` for GitHub Packages and `npm-npmjs` for the public npm registry. The npm update entry must continue to reference both under `registries`; do not remove either registry or its credentials.
+
+## TypeScript Style
+
+- Format TypeScript and TSX with the repository's Prettier config. Use two spaces and spaces, never tabs.
+- Use explicit relative extensions: `.ts` for TypeScript modules and `.tsx` for TSX modules.
+- Keep imports in the order enforced by `@tjsr/eslint-config`'s `import/order` rule; do not use a separate alphabetic import sorter.
+- Format and apply ESLint fixes on save. Run the repository's lint check after changing imports or formatting rules.
+
+## Package Type Exports
+
+- Keep `exports` type conditions aligned with both ESM and CommonJS runtime entries. Verify declaration files referenced by each condition are included in `npm pack --dry-run`.
+- When source imports use explicit `.ts` extensions, verify emitted JavaScript and declaration specifiers resolve to files in the packed ESM and CJS folders.
+- Before a dependent repo updates its lockfile, ensure the fixed package version is published to GitHub Packages; a workspace package version alone is not installable in CI.
+- When a consumer CJS build fails to resolve this package's types, inspect its lockfile version and conditional `exports`; ensure both `import` and `require` resolve declaration files before publishing a fix.
+- Keep the next unpublished fixed release at `0.1.11` unless another version has since been published; after publishing, update dependent lockfiles from the registry rather than checking in a local tarball reference.
