@@ -18,7 +18,7 @@
         "default": "./dist/esm/utils.js"
       },
       "require": {
-        "types": "./dist/esm/utils.d.ts",
+        "types": "./dist/cjs/utils.d.cts",
         "default": "./dist/cjs/utils.cjs"
       }
     }
@@ -26,7 +26,7 @@
   "scripts": {
     "build": "rimraf dist && tsc",
     "build:dev": "linkteam -i && tsc -w",
-    "build:dist": "rimraf dist && tsc -p tsconfig.publish.json && tsc -p tsconfig.cjs.json && node scripts/rewrite-dts-imports.cjs dist && rewrite-cjs dist/cjs",
+    "build:dist": "rimraf dist && tsc -p tsconfig.publish.json && tsc -p tsconfig.cjs.json && node scripts/rewrite-dts-imports.cjs dist && rewrite-cjs dist/cjs && node scripts/finalize-cjs-declarations.cjs",
     "check": "npx npm-check",
     "clean": "rimraf build dist coverage",
     "clean:all": "rimraf build dist coverage node_modules",
@@ -36,7 +36,8 @@
     "prepack": "npm test && npm run build:dist",
     "prepublishOnly": "npm run clean",
     "test": "vitest --run && npm run lint",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "test:package": "node scripts/test-package.cjs"
   },
   "nodemonConfig": {
     "watch": [
@@ -96,5 +97,8 @@
   "allowScripts": {
     "esbuild@0.21.5": true,
     "esbuild@0.27.2": true
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }

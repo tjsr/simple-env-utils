@@ -7,3 +7,4 @@ build
 *.log
 src/cryptedValues.ts
 .npm-cache/
+.package-test-*/
