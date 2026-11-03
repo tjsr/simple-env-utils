@@ -33,7 +33,7 @@ jobs:
     - name: Use configured npm version
       run: npm install --global npm@latest
 
-    - run: node --test scripts/npm-json.test.mjs
+    - run: node --test scripts/check-npm-json.mjs
 
     - name: Check approved version is unused
       if: github.ref == 'refs/heads/fix/commonjs-package-declarations' || github.head_ref == 'fix/commonjs-package-declarations'
