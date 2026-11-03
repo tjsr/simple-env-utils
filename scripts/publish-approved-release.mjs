@@ -23,3 +23,5 @@ execFileSync(process.execPath, ['scripts/test-package.cjs'], {
   stdio: 'inherit', env: { ...process.env, PACKAGE_TEST_SPEC: pkg.name + '@' + pkg.version },
 });
 console.log('Verified published package ' + pkg.name + '@' + pkg.version + ' integrity, runtime and declarations');
+
+console.log('Published registry metadata: ' + npm(['view', pkg.name + '@' + pkg.version, '--json', '--registry', registry]));
