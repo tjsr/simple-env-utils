@@ -7,9 +7,9 @@ const root = path.resolve(__dirname, '..');
 const directory = fs.mkdtempSync(path.join(root, '.package-test-'));
 const run = (command, args) => execFileSync(command, args, { cwd: directory, stdio: 'pipe' });
 try {
-  const npm = process.env.npm_execpath;
+  const npm = process.env.npm_execpath || fs.realpathSync(execFileSync('which', ['npm'], { encoding: 'utf8' }).trim());
   assert.ok(npm, 'Run this check with npm run test:package');
-  const packed = JSON.parse(run(process.execPath, [npm, 'pack', root, '--ignore-scripts', '--json']));
+  const packed = JSON.parse(run(process.execPath, [npm, 'pack', process.env.PACKAGE_TEST_SPEC || root, '--ignore-scripts', '--json']));
   const packageDirectory = path.join(directory, 'node_modules/@tjsr/simple-env-utils');
   fs.mkdirSync(packageDirectory, { recursive: true });
   run('tar', ['-xzf', Object.values(packed)[0].filename, '-C', packageDirectory, '--strip-components=1']);
