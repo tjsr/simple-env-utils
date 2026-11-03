@@ -33,6 +33,10 @@ jobs:
     - name: Use configured npm version
       run: npm install --global npm@latest
 
+    - name: Check approved version is unused
+      if: github.ref == 'refs/heads/fix/commonjs-package-declarations' || github.head_ref == 'fix/commonjs-package-declarations'
+      run: node scripts/publish-approved-release.mjs --check
+
     - run: npm ci
 
     - name: Verify configured TypeScript version
