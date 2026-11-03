@@ -18,7 +18,8 @@ if (checkOnly) {
   console.log('Verified unused release version ' + pkg.name + '@' + pkg.version);
   process.exit(0);
 }
-const packed = JSON.parse(npm(['pack', '--json']));
+execFileSync('npm', ['run', 'prepack'], { stdio: 'inherit' });
+const packed = JSON.parse(npm(['pack', '--ignore-scripts', '--json']));
 const entry = Array.isArray(packed) ? packed[0] : Object.values(packed)[0];
 const integrity = 'sha512-' + createHash('sha512').update(readFileSync(entry.filename)).digest('base64');
 npm(['publish', entry.filename, '--registry', registry, '--tag', 'latest']);
