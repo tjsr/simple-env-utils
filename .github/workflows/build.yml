@@ -33,6 +33,12 @@ jobs:
     - name: Use configured npm version
       run: npm install --global npm@latest
 
+    - run: node --test scripts/check-npm-json.mjs
+
+    - name: Check approved version is unused
+      if: github.ref == 'refs/heads/release/simple-env-utils-0.1.11' || github.head_ref == 'release/simple-env-utils-0.1.11'
+      run: node scripts/publish-approved-release.mjs --check
+
     - run: npm ci
 
     - name: Verify configured TypeScript version
@@ -47,3 +53,27 @@ jobs:
       if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/prod'
       run: |
         npm publish --dry-run
+
+  publish-approved-fix:
+    name: Publish approved simple-env-utils 0.1.11
+    needs: build-simple-env-utils
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'Release simple-env-utils 0.1.11')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    concurrency:
+      group: simple-env-utils-approved-release-0.1.11
+      cancel-in-progress: false
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          registry-url: https://npm.pkg.github.com
+          scope: '@tjsr'
+      - run: npm install --global npm@latest
+      - run: npm ci
+      - run: node scripts/publish-approved-release.mjs

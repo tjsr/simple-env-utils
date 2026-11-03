@@ -29,3 +29,7 @@ The repo will requires an NPM_TOKEN to update npm dependencies using dependabot.
 ## Contact
 
 For details, questions, or requests, contact Tim Rowe <tim@tjsr.id.au>
+
+## Verified package release
+
+The reviewed 0.1.11 release uses `scripts/publish-approved-release.mjs`. It refuses an existing registry version, runs package preparation, publishes the exact tarball without changing tags in Git, and verifies registry integrity plus downloaded ESM/CommonJS consumer checks. The guarded main-branch job runs only for a commit beginning `Release simple-env-utils 0.1.11` after the build passes. The manual reviewed-version workflow uses the same checks.
