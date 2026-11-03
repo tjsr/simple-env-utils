@@ -3,6 +3,8 @@ const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 
+const { firstNpmRecord } = require('./npm-json.mjs');
+
 const root = path.resolve(__dirname, '..');
 const directory = fs.mkdtempSync(path.join(root, '.package-test-'));
 const run = (command, args) => execFileSync(command, args, { cwd: directory, stdio: 'pipe' });
@@ -12,7 +14,7 @@ try {
   const packed = JSON.parse(run(process.execPath, [npm, 'pack', process.env.PACKAGE_TEST_SPEC || root, '--ignore-scripts', '--json']));
   const packageDirectory = path.join(directory, 'node_modules/@tjsr/simple-env-utils');
   fs.mkdirSync(packageDirectory, { recursive: true });
-  run('tar', ['-xzf', Object.values(packed)[0].filename, '-C', packageDirectory, '--strip-components=1']);
+  run('tar', ['-xzf', firstNpmRecord(packed).filename, '-C', packageDirectory, '--strip-components=1']);
   const manifest = JSON.parse(fs.readFileSync(path.join(packageDirectory, 'package.json'), 'utf8'));
   for (const condition of ['import', 'require']) {
     for (const field of ['types', 'default']) {
