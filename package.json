@@ -26,7 +26,7 @@
   "scripts": {
     "build": "rimraf dist && tsc",
     "build:dev": "linkteam -i && tsc -w",
-    "build:dist": "rimraf dist && tsc -p tsconfig.publish.json && tsc -p tsconfig.cjs.json && node scripts/rewrite-dts-imports.cjs dist && rewrite-cjs dist/cjs && node scripts/finalize-cjs-declarations.cjs",
+    "build:dist": "rimraf dist && tsc -p tsconfig.publish.json && tsc -p tsconfig.cjs.json && node scripts/rewrite-dts-imports.cjs dist && node scripts/finalize-cjs-declarations.cjs",
     "check": "npx npm-check",
     "clean": "rimraf build dist coverage",
     "clean:all": "rimraf build dist coverage node_modules",
