@@ -1,4 +1,5 @@
 {
   "extends": "./tsconfig.json",
+  "compilerOptions": { "emitDeclarationOnly": false },
   "exclude": ["**/*.test.ts", "vitest.config.ts", "build", "dist", "node_modules", "src/cryptedValues.ts"]
 }

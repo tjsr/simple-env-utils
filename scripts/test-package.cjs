@@ -16,7 +16,7 @@ try {
   const manifest = JSON.parse(fs.readFileSync(path.join(packageDirectory, 'package.json'), 'utf8'));
   for (const condition of ['import', 'require']) {
     for (const field of ['types', 'default']) {
-      assert.ok(fs.existsSync(path.join(packageDirectory, manifest.exports['.'][condition][field])));
+      assert.ok(fs.existsSync(path.join(packageDirectory, manifest.exports['.'][condition][field])), `${condition}.${field} is missing from the packed distribution`);
     }
   }
   const fixture = `import { isTestMode, requireEnv } from '@tjsr/simple-env-utils';
