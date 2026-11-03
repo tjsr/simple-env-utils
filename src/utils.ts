@@ -1,8 +1,8 @@
+import path from 'path';
+
 import * as dotenv from 'dotenv-flow';
 
 import { EnvFilesToLoadInfo, fileSetsLoaded, getEnvFilesToLoad } from './getEnvFilesToLoad.ts';
-
-import path from 'path';
 
 let loadOptions: SimpleEnvOptions|undefined = undefined;
 

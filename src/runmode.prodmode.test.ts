@@ -1,3 +1,5 @@
+import { TestContext } from "node:test";
+
 import {
   RuntimeEnvMode,
   copyRuntimeMode,
@@ -9,8 +11,6 @@ import {
   setProductionMode,
   setTestMode
 } from "./utils.js";
-
-import { TestContext } from "node:test";
 
 type RuntimeModeContext = {
   pretestMode: RuntimeEnvMode;
