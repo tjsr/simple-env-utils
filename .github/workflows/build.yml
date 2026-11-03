@@ -56,7 +56,7 @@ jobs:
     - name: Package dry run on non-release branches
       if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/prod'
       run: |
-        npm publish --dry-run
+        npm pack --dry-run
 
   publish-approved-fix:
     name: Publish approved simple-env-utils 0.1.11
