@@ -3,6 +3,10 @@ run-name: Running simple-env-utils build.
 on: [push, pull_request]
 jobs:
   build-simple-env-utils:
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [22, 24, 26]
     runs-on: ubuntu-latest
     env:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -13,7 +17,7 @@ jobs:
     - name: Use configured Node.js version
       uses: actions/setup-node@v7
       with:
-        node-version: ${{ vars.NODE_VERSION }}
+        node-version: ${{ matrix.node-version }}
         registry-url: 'https://npm.pkg.github.com'
 
     - name: Cache node modules
@@ -24,10 +28,10 @@ jobs:
       with:
         # npm cache files are stored in `~/.npm` on Linux/macOS
         path: ~/.npm
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        key: ${{ runner.os }}-${{ matrix.node-version }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
+          ${{ runner.os }}-${{ matrix.node-version }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-${{ matrix.node-version }}-build-
           ${{ runner.os }}-
 
     - name: Use configured npm version
@@ -52,7 +56,7 @@ jobs:
     - name: Package dry run on non-release branches
       if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/prod'
       run: |
-        npm publish --dry-run
+        npm pack --dry-run
 
   publish-approved-fix:
     name: Publish approved simple-env-utils 0.1.11
