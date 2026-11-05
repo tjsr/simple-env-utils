@@ -1,22 +1,46 @@
-name: Publish reviewed package version
-on: workflow_dispatch
+name: Bump version and publish
+run-name: Bump ${{ inputs.patchlevel }} version of simple-env-utils
+
+on:
+  workflow_dispatch:
+    inputs:
+      patchlevel:
+        description: Release level
+        type: choice
+        required: true
+        default: prerelease
+        options: [prerelease, patch, minor, major]
+      noTag:
+        description: Do not create a Git tag
+        type: boolean
+        default: false
+      noPublish:
+        description: Bump without publishing
+        type: boolean
+        default: false
+      usePr:
+        description: Create a release PR
+        type: boolean
+        default: true
+
 permissions:
-  contents: read
+  contents: write
   packages: write
-concurrency:
-  group: simple-env-utils-approved-release-0.1.11
-  cancel-in-progress: false
+  pull-requests: write
+
 jobs:
-  publish:
-    if: github.ref == 'refs/heads/main'
+  bump:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.bump.outputs.version }}
+      published: ${{ steps.bump.outputs.published }}
     env:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
-          node-version: ${{ vars.NODE_VERSION }}
+          node-version: ${{ vars.NODE_VERSION || '24' }}
           registry-url: https://npm.pkg.github.com
           scope: '@tjsr'
       - run: npm install --global npm@latest
@@ -24,4 +48,32 @@ jobs:
       - run: npm test
       - run: npm run build:dist
       - run: npm run test:package
-      - run: node scripts/publish-approved-release.mjs
+      - name: Bump and publish
+        id: bump
+        uses: tjsr/gh-util-actions/version-bump-publish@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          patchlevel: ${{ inputs.patchlevel }}
+          no-tag: ${{ inputs.noTag }}
+          no-publish: ${{ inputs.noPublish }}
+          preid: ${{ github.ref != 'refs/heads/main' && 'dev' || 'release' }}
+          requiresPr: ${{ inputs.usePr || github.ref == 'refs/heads/main' }}
+
+  notify-consumers:
+    needs: bump
+    if: needs.bump.outputs.published == 'true'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.TJSR_AUTOMATION_TOKEN }}
+      PACKAGE_NAME: '@tjsr/simple-env-utils'
+      PACKAGE_VERSION: ${{ needs.bump.outputs.version }}
+    steps:
+      - name: Dispatch dependency updates
+        run: |
+          test -n "$GH_TOKEN" || { echo 'TJSR_AUTOMATION_TOKEN is required to notify downstream repositories.'; exit 1; }
+          for repository in tjsr/mysql-pool-utils tjsr/user-session-middleware tjsr/tagtool tjsr/absee; do
+            gh api --method POST "repos/$repository/dispatches" \
+              -f event_type=tjsr-package-published \
+              -f "client_payload[package]=$PACKAGE_NAME" \
+              -f "client_payload[version]=$PACKAGE_VERSION"
+          done
