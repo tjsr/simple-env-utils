@@ -69,7 +69,7 @@
   },
   "homepage": "https://github.com/tjsr/simple-env-utils#readme",
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^6.0.0",
+    "@stylistic/eslint-plugin": "^6.0.1",
     "@tjsr/eslint-config": "github:tjsr/eslint-config#main",
     "@tjsr/fs-utils": "^0.0.8",
     "@tjsr/testutils": "^0.0.11",
